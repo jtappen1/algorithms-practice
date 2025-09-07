@@ -2,6 +2,7 @@
 
 This repository contains my solutions to coding problems, primarily from **LeetCode Top 100** and other algorithm challenges. The goal is to improve problem-solving skills, data structures, and algorithmic thinking while building a portfolio of clean, documented code.
 
+[Link to leetcode profile](https://leetcode.com/u/jtapp/)
 ---
 
 ## 📂 Repository Structure
