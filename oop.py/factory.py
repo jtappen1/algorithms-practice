@@ -4,6 +4,7 @@ Factory Method implementation in Python
 from abc import ABC, abstractmethod
 
 # Simple Factory:
+# This is useful when 
 class EmailNotification1:
     def send(self, send_message):
         print(f'Sending email message: {send_message}')
