@@ -73,3 +73,8 @@ if __name__ == "__main__":
    text_editor()
    editor()
 
+# Takeaways:
+# Decorator is best used when you need to stack functionalities on top of each other arbitrarily.
+# It needs a base class that implements the specific transformation you want to do, a base class for the item that is being transformed, and then a decorator class that 
+# when initialized stores what wraps it, and called the transformation function on it.
+

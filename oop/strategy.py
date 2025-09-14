@@ -38,8 +38,38 @@ class ShippingCostService:
     def calculate_shipping_cost(self, order):
         return self.strategy.calculate_cost(order) 
 
+
+################################################################################################################################################
+# Credit Card Payment Process
+
+class Payment(ABC):
+    @abstractmethod
+    def pay(self, amount):
+        pass
+
+class ApplePay(Payment):
+    def pay(self, amount):
+        return f"Payed using Apple Pay {amount}"
+
+class Crypto(Payment):
+    def pay(self, amount):
+        return f"Payed using Crypto {amount}"
+
+def checkout(method: str, amount: float):
+    strategies = {
+        "Crypto": Crypto(),
+        "ApplePay": ApplePay()
+    }
+    strategy = strategies.get(method)
+    if strategy is None:
+        raise ValueError("Invalid payment type")
+    print(strategy.pay(amount))
+
 if __name__ == '__main__':
     service = ShippingCostService(FlatRateShipping(10))
     service.calculate_shipping_cost(10)
+
+    checkout("Crypto", 10.0)
+    checkout("ApplePay", 100.0)
 
     
