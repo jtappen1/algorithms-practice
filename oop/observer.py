@@ -137,6 +137,7 @@ class Stock:
         for observer in self._observers:
             observer.update(self)
 
+# Make the Observer Base class, this will have the update method that will be called 
 class Observer(ABC):
     @abstractmethod
     def update(self, stock):
@@ -164,11 +165,87 @@ def market():
     apple_stock.price = 25
     apple_stock.notify()
 
-# Example usage
+#########################################################################################################################################################
+# Scenario – Weather Station / Display System
+
+# You are building a weather monitoring system. The system tracks weather data (temperature, humidity, pressure) and notifies multiple display units whenever data changes.
+# Requirements:
+# The WeatherStation is the subject — it stores the current weather readings.
+
+# Multiple displays can subscribe to updates:
+# CurrentConditionsDisplay → shows the current temperature and humidity.
+# StatisticsDisplay → shows average, min, and max temperature over time.
+# ForecastDisplay → shows a simple forecast based on pressure trends.
+# Displays should update automatically whenever the weather changes.
+
+# You should be able to add or remove displays at runtime.
+
+import numpy as np
+class WeatherStation:
+    def __init__(self,  temperature, humidity):
+        self.temperature = temperature
+        self.humidity = humidity
+        self._observers = {}
+    
+    def attach(self, observer):
+        if observer.name in self._observers:
+            raise Exception("Display Already Exists")
+        self._observers[observer.name] = observer
+    
+    def detach(self, observer):
+        if observer.name not in self._observers:
+            raise Exception("Display not found in Observers")
+    
+    def notify(self):
+        for observer in self._observers.values():
+            observer.update(self)
+
+class Observer(ABC):
+    def __init__(self, name):
+        self.name = name
+        
+    @abstractmethod
+    def update(self, weather_station):
+        pass
+
+class CurrentConditionsDisplay(Observer):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def update(self, weather_station):
+        print(f"Current Temp: {weather_station.temperature} Current Humidity: {weather_station.humidity}")
+    
+class StatisticsDisplay(Observer):
+    def __init__(self, name):
+        super().__init__(name)
+        self._temperatures = []
+        self._humidity = []
+    
+    def clear(self):
+        self._temperatures.clear()
+        self._humidity.clear() 
+
+    def update(self, weather_station):
+        self._temperatures.append(weather_station.temperature)
+        self._humidity.append(weather_station.humidity)
+        print(f"Mean temp: {np.mean(self._temperatures)} Mean Humidity {np.mean(self._humidity)}")
+
+def demo_station():
+    ws = WeatherStation(100, 0.5)
+    ws.attach(StatisticsDisplay("StatsDisplay"))
+    ws.attach(CurrentConditionsDisplay("CurrConditionsDisplay"))
+
+    ws.temperature = 40
+    ws.notify()
+
+    ws.humidity = 0.8
+    ws.notify()
+
 if __name__ == "__main__":
 
     # print("\n\n=== Observer Pattern Approach ===")
     # fitness_app_observer_demo()
 
-    market()
+    # market()
 
+    demo_station()
