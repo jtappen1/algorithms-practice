@@ -118,9 +118,57 @@ def fitness_app_observer_demo():
     notifier.reset()
     fitness_data.daily_reset()
 
+
+#########################################################################################################################################################
+# 1.  Make the subject: This is the object that maintains the statem and notifies the observers how it changes.
+class Stock:
+    def __init__(self, name: str, price: float):
+        self.name = name
+        self.price = price
+        self._observers = []
+    
+    def attach(self, observer):
+        self._observers.append(observer)
+    
+    def detach(self, observer):
+        self._observers.remove(observer)
+
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self)
+
+class Observer(ABC):
+    @abstractmethod
+    def update(self, stock):
+        pass
+
+class PriceAlert(Observer):
+    def __init__(self, threshold: int):
+        self.threshold =threshold
+
+    def adjust_threshold(self, threshold):
+        self.threshold = threshold
+
+    def update(self, stock):
+        if self.threshold < stock.price:
+            print(f"Alert! {stock.name} price is above {self.threshold}: {stock.price}")
+
+def market():
+    apple_stock = Stock("APPL", 10)
+    alert1 = PriceAlert(15)
+    alert2 = PriceAlert(20)
+
+    apple_stock.attach(alert1)
+    apple_stock.attach(alert2)
+
+    apple_stock.price = 25
+    apple_stock.notify()
+
 # Example usage
 if __name__ == "__main__":
 
-    print("\n\n=== Observer Pattern Approach ===")
-    fitness_app_observer_demo()
+    # print("\n\n=== Observer Pattern Approach ===")
+    # fitness_app_observer_demo()
+
+    market()
 
