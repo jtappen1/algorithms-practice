@@ -23,3 +23,26 @@ class ThreadsafeSingleton:
 # That uses the _lock attribute which is defined as a class variable and is available globally, so there is only one per instance globally. 
 # That is what makes it threadsafe, and then from there if there is not a instance created we initialize it and set it, otherwise we just return it. 
 # And so that single instance that is available globally and can't be replicated.
+
+
+####################################################################################################################################################
+# Singleton Practice
+
+from threading import Lock
+class Logger:
+    _instance = None
+    _lock = Lock()
+    def __init__(self):
+        if Logger._instance is not None:
+            raise Exception("Use get_instance instead")
+        
+    @staticmethod
+    def get_instance():
+        with Logger._lock:
+            if Logger._instance is None:
+                Logger._instance = Logger()
+        return Logger._instance
+
+    def log(self, message: str):
+        with open(self._log_file, "a") as f:
+            f.write(message + "\n")
