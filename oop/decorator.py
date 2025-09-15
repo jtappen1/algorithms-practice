@@ -69,12 +69,46 @@ def text_editor():
     decorated_text = ItalicsDecorator(BoldDecorator(BaseText()))
     print(decorated_text.transform(text))
 
-if __name__ == "__main__":
-   text_editor()
-   editor()
+# if __name__ == "__main__":
+#    text_editor()
+#    editor()
 
 # Takeaways:
 # Decorator is best used when you need to stack functionalities on top of each other arbitrarily.
 # It needs a base class that implements the specific transformation you want to do, a base class for the item that is being transformed, and then a decorator class that 
 # when initialized stores what wraps it, and called the transformation function on it.
 
+####################################################################################################################################################
+from abc import ABC
+class Map(ABC):
+    @abstractmethod
+    def render(self):
+        pass
+
+class BaseMap(Map):
+    def render(self):
+        return "map"
+
+class MapDecorator(Map):
+    def __init__(self, wrapped):
+        self.wrapped = wrapped
+
+    def render(self):
+        return self.wrapped.render()
+
+class TrafficDecorator(MapDecorator):
+    def render(self):
+        result = self.wrapped.render()
+        return f"<traffic>{result}<traffic>"
+
+class TerrainDecorator(MapDecorator):
+    def render(self):
+        result = self.wrapped.render()
+        return f"<terrain>{result}<terrain>"
+    
+def main():
+    decorated_map = TrafficDecorator(TerrainDecorator(BaseMap()))
+    print(decorated_map.render())
+    
+if __name__ == "__main__":
+    main()
