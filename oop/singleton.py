@@ -46,3 +46,31 @@ class Logger:
     def log(self, message: str):
         with open(self._log_file, "a") as f:
             f.write(message + "\n")
+
+
+
+####################################################################################################################################################################################################################################
+
+
+class LocalizationService:
+    _instance = None
+    def __init__(self):
+        if LocalizationService._instance is not None:
+            raise Exception("Use get_instance instead")
+        
+    @staticmethod
+    def get_instance():
+        if LocalizationService._instance is None:
+            LocalizationService._instance = LocalizationService()
+        return LocalizationService._instance
+    
+    def access(self):
+        print("Accessing Service.....")
+
+
+if __name__ == "__main__":
+    service = LocalizationService.get_instance()
+    service.access()
+
+
+
