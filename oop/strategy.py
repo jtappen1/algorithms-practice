@@ -73,3 +73,42 @@ if __name__ == '__main__':
     checkout("ApplePay", 100.0)
 
     
+################################################################################################################################################
+'''
+You’re creating a path cost engine. Depending on context, a vehicle might want to minimize distance, travel time, tolls, or fuel. 
+The system should allow switching among these approaches at runtime while keeping the rest of the navigation pipeline the same.
+'''
+
+
+class PathCost(ABC):
+    @abstractmethod
+    def minimize_cost(self, cost):
+        pass
+
+class DistanceCost(PathCost):
+    def minimize_cost(self, cost):
+        return f"Minimizing distance cost: {cost}"
+    
+class FuelCost(PathCost):
+    def minimize_cost(self, cost):
+        return f"Minimizing fuel cost: {cost}"
+    
+
+class Engine:
+    def __init__(self, strategy):
+        self.strategy = strategy
+
+    def set_strategy(self, strategy: PathCost):
+        self.strategy = strategy
+    
+    def run_pipeline(self, cost):
+       print(self.strategy.minimize_cost(cost))
+
+if __name__ == "__main__":
+    engine = Engine(FuelCost())
+    engine.run_pipeline(10)   # Minimize fuel cost
+
+    engine.set_strategy(DistanceCost())
+    engine.run_pipeline(10)   # Minimize distance cost
+
+        
